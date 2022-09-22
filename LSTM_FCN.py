@@ -1,7 +1,6 @@
 # paper: https://arxiv.org/abs/1801.04503
 # reposity: https://github.com/titu1994/LSTM-FCN
 
-
 import torch
 import torch.nn as nn
 
