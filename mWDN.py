@@ -69,8 +69,7 @@ class mWDN(nn.Module):
 
 
     def forward(self, input):
-        input = input.permute(0,2,1)
-        # input [B, F, T] where B = Batch size, T = Time sampels, F = features
+        # input [B, F, T] where B = Batch size, F = features, T = Time sampels,
         ah_1 = self.sigmoid(self.mWDN1_H(input))
         al_1 = self.sigmoid(self.mWDN1_L(input))
         xh_1 = self.a_to_x(ah_1)     # [B, F, T] -> [B, F, T/2]
@@ -99,9 +98,7 @@ class mWDN(nn.Module):
         W_mWDN2_L = self.mWDN2_L.weight.data
         L_loss = torch.norm((W_mWDN1_L - self.cmp_mWDN1_L), 2) + torch.norm((W_mWDN2_L - self.cmp_mWDN2_L), 2)
         H_loss = torch.norm((W_mWDN1_H - self.cmp_mWDN1_H), 2) + torch.norm((W_mWDN2_H - self.cmp_mWDN2_H), 2)
-
         lossLH = 0.3 * L_loss + 0.3 * H_loss
-
         return output, lossLH
 
     def init_state(self):
