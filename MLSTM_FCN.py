@@ -53,13 +53,13 @@ class MLSTM_FCN(nn.Module):
         return h0, c0
 
     def forward(self, x):
-        # input x : [B,T,F] , where B = Batch size, T = Time sampels, F = features
+        # input x : [B, F, T], where B = Batch size, F = features, T = Time sampels
         h0, c0 = self.init_hidden()
-        x1, (ht, ct) = self.lstm(x, (h0, c0))
+        x1 = x.transpose(2, 1)   # [B, T, F]
+        x1, (ht, ct) = self.lstm(x1, (h0, c0))
         x1 = x1[:, -1, :]  # [B, LSTM_Out]
 
-        x2 = x.transpose(2, 1)  # [B, F, T]
-        x2 = self.ConvDrop(self.relu(self.BN1(self.C1(x2))))
+        x2 = self.ConvDrop(self.relu(self.BN1(self.C1(x))))
         x2 = self.SE1(x2)
         x2 = self.ConvDrop(self.relu(self.BN2(self.C2(x2))))
         x2 = self.SE2(x2)
