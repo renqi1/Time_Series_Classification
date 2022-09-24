@@ -4,8 +4,6 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-# classes
-
 class Residual(nn.Module):
     def __init__(self, fn):
         super().__init__()
