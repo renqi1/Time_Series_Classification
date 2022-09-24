@@ -123,21 +123,23 @@ class MLP(nn.Module):
     def forward(self, x):
         return self.mlp(x)
 
-
 class TabTransformer(nn.Module):
-    def __init__(self, seq_len, n_classes, depth=6, dim=64, num_heads=8, attn_dropout=0.1, ff_dropout=0.1, hidden_dimensions=[128, 64]):
+    def __init__(self, seq_len, n_features, n_classes, depth=6, dim=64, num_heads=8, attn_dropout=0.1, ff_dropout=0.1, hidden_dimensions=[128, 64]):
         super().__init__()
 
-        self.transformer = Transformer(seq_len, depth, dim, num_heads, attn_dropout, ff_dropout)
-        self.norm = nn.LayerNorm(dim)
-        all_dimensions = [dim*2, *hidden_dimensions, n_classes]
+        self.transformer = Transformer(n_features, depth, dim, num_heads, attn_dropout, ff_dropout)
+        self.norm = nn.LayerNorm(seq_len)
+        all_dimensions = [seq_len, *hidden_dimensions, n_classes]
+        self.downsample = nn.Linear(hidden_dimensions[-1]+n_features, 1)
         self.mlp = MLP(all_dimensions)
 
     def forward(self, x):
-
-        x1 = self.transformer(x)
+        # input x: [B, F, T],  where B = Batch size, F = features, T = Time sampels
+        x1 = x.permute(0, 2, 1)     # [B, T, F]
+        x1 = self.transformer(x1)
         x2 = self.norm(x)
+        x2 = x2.permute(0, 2, 1)    # [B, T, F]
         x = torch.cat((x1, x2), dim=2)
+        x = self.downsample(x).squeeze(-1)
         x = self.mlp(x)
         return x
-
