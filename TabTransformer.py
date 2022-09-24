@@ -87,9 +87,9 @@ class Attention(nn.Module):
 
 
 class Transformer(nn.Module):
-    def __init__(self, seq_len, depth=6, dim=64, num_heads=8, attn_dropout=0.1, ff_dropout=0.1):
+    def __init__(self, n_features, depth=6, dim=64, num_heads=8, attn_dropout=0.1, ff_dropout=0.1):
         super().__init__()
-        self.embeds = nn.Linear(seq_len, dim)
+        self.embeds = nn.Linear(n_features, dim)
         self.layers = nn.ModuleList([])
 
         for _ in range(depth):
@@ -122,6 +122,7 @@ class MLP(nn.Module):
 
     def forward(self, x):
         return self.mlp(x)
+
 
 class TabTransformer(nn.Module):
     def __init__(self, seq_len, n_features, n_classes, depth=6, dim=64, num_heads=8, attn_dropout=0.1, ff_dropout=0.1, hidden_dimensions=[128, 64]):
