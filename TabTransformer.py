@@ -1,4 +1,5 @@
 # paper: https://arxiv.org/abs/2012.06678
+# code: https://github.com/awslabs/autogluon/tree/master/tabular/src/autogluon/tabular/models/tab_transformer
 
 import torch
 import torch.nn.functional as F
