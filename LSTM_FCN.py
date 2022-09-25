@@ -46,7 +46,7 @@ class LSTM_FCN(nn.Module):
         x2 = self.ConvDrop(self.relu(self.BN2(self.C2(x2))))
         x2 = self.ConvDrop(self.relu(self.BN3(self.C3(x2))))
         x2 = torch.mean(x2, 2)  # Global average pooling --> [B, Conv3_NF]
-
+        # x2 = x2[:, :, -1]     # you may get a better result if you use this to replace the global average pooling 
         x_all = torch.cat((x1, x2), dim=1)  # [B, LSTM_Out+Conv3_NF]
         x_out = self.FC(x_all)
         return x_out
