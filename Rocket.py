@@ -1,8 +1,7 @@
 # paper: https://arxiv.org/abs/1910.13051
 # code: https://github.com/angus924/rocket
 
-# Convolution layer is randomly generated, so I suggest write the prediction code after training
-# or you can export onnx model for prediction
+# Convolution layer is randomly generated, so I suggest you setting random seed
 
 import torch
 import torch.nn as nn
